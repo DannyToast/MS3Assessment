@@ -33,11 +33,9 @@ I approached this first by thinking about how I could parse the CSV into a Recor
 on my own, given a little time, I saw in the instructions that using open source libraries was encouraged, so I sought to do just that. I ended up settling on Apache
 Commons CSV since it appeared to have a lot of support and a strong community just in case I had any questions (although I wasn't a big fan of their documentation). I
 built the parser using this library and then set to work on separating out the failed and successful records. Luckily Apache Commons CSV has a handy little method that
-checks for consistency in the parsed CSVRecord object (whether the record column count matches the header count, so I decided to use that since the results matched up to 
-what I was expecting, although it was grabbing an "extra" record that I was unsure whether it was intentionally placed or it was some accidentally modification I had made to the CSV in testing. Both the logic I 
-had created and this built in method picked it up. I decided to leave it as failed since it didn't show up in any other CSV's I personally tested.
+checks for consistency in the parsed CSVRecord object (whether the record column count matches the header count, so I decided to use that since the results matched up to what I was expecting.
 
-I should also mention that I made the Records class after what I had assumed each column was representing, to the best of my ability, it was mostly an organizational
+I should also mention that I made the Records class after what I assumed each column was representing, to the best of my ability, it was mostly an organizational
 tool as I figured getters and setters for singular letters (i.e. getA, setB) would start to look really confusing, to both me and anyone reading this later.
 
 After confirming that these results were satisfactory, I built the SQLite database and table using using the JDBC SQLite driver, and set to work creating a function
