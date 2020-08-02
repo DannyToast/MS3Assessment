@@ -31,7 +31,10 @@ when designing business logic after the fact to handle these columns.
 
 I approached this first by thinking about how I could parse the CSV into a Records object. While this is something I think I could have easily written the logic for
 on my own, given a little time, I saw in the instructions that using open source libraries was encouraged, so I sought to do just that. I ended up settling on Apache
-Commons CSV since it appeared to have a lot of support and a strong community just in case I had any questions. I built the parser using this library and then set to work on separating out the failed and successful records. Luckily this library has a handy little method that checks for records with record column counts that don't match the header count.
+Commons CSV since it appeared to have a lot of support and a strong community just in case I had any questions. I built the parser using this library and then set to work on separating out the failed and successful records. Luckily this library has a handy little method that checks for records with record column counts that don't match the header count. 
+
+As an aside, there is a trailing whitespace line that this picks up as an extra record, it would be simple to remove this but I was unsure if this was intentionally placed as a "blank" record and meant to be marked as invalid so I'm going to leave it in. Simply stripping the trailing space returns just the
+records with content that are incorrect.
 
 I should also mention that I made the Records class members after what I assumed each column was representing, to the best of my ability, it was mostly an organizational tool as I figured getters and setters for singular letters (i.e. getA, setB) would start to look really confusing, to both me and anyone reading this later.
 
