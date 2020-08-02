@@ -26,23 +26,17 @@ so I didn't add functionality to overwrite existing databases, or append to them
 as you delete all generated files (ms3Interview-bad.csv, ms3Interview.db, and the log) and keep a CSV in the root directory with a valid format.
 
 ## Design Choices and Assumptions
-First and foremost I kept all data types in the SQLite database as text only. I could have reassigned the Boolean values in the later columns to an
-integer 1 and 0 but I figured that since the exercise was to port the CSV to a database I should preserve the form of those CSV records as much as possible.
+Something pertinent I should mention first is that I kept all data types in the SQLite database as text only. I could have reassigned the Boolean values in the later columns to an integer 1 and 0 but I figured that since the exercise was to port the CSV to a database I should preserve the form of those CSV records as much as possible. Practically speaking I'd almost certainly have used data types, since text versions of boolean or double values (as both were present) are much more useful
+when designing business logic after the fact to handle these columns.
 
 I approached this first by thinking about how I could parse the CSV into a Records object. While this is something I think I could have easily written the logic for
 on my own, given a little time, I saw in the instructions that using open source libraries was encouraged, so I sought to do just that. I ended up settling on Apache
-Commons CSV since it appeared to have a lot of support and a strong community just in case I had any questions (although I wasn't a big fan of their documentation). I
-built the parser using this library and then set to work on separating out the failed and successful records. Luckily Apache Commons CSV has a handy little method that
-checks for consistency in the parsed CSVRecord object (whether the record column count matches the header count, so I decided to use that since the results matched up to what I was expecting.
+Commons CSV since it appeared to have a lot of support and a strong community just in case I had any questions. I built the parser using this library and then set to work on separating out the failed and successful records. Luckily this library has a handy little method that checks for records with record column counts that don't match the header count.
 
-I should also mention that I made the Records class after what I assumed each column was representing, to the best of my ability, it was mostly an organizational
-tool as I figured getters and setters for singular letters (i.e. getA, setB) would start to look really confusing, to both me and anyone reading this later.
+I should also mention that I made the Records class members after what I assumed each column was representing, to the best of my ability, it was mostly an organizational tool as I figured getters and setters for singular letters (i.e. getA, setB) would start to look really confusing, to both me and anyone reading this later.
 
 After confirming that these results were satisfactory, I built the SQLite database and table using using the JDBC SQLite driver, and set to work creating a function
-that would insert these records after they had been parsed and sorted from the CSV. This was pretty self-explanatory as I had worked with SQLite databases before
-on an Android application, although I hadn't used this specific driver before I was more or less familiar with forming queries and prepared statements. Since the 
-performance would take forever inserting them one by one I made a batch insert and made a single commit for the batch and took the time down significantly, it now hovers around 300ms-500ms for the given CSV.
-I thought about trying to take this lower but I didn't want to wait to turn the assignment in any longer since I had already been out of town for most of the week and been unable to work on it.
+that would insert the Record objects parsed from the CSV. This was pretty self-explanatory as I had worked with SQLite databases before on an Android application, although I hadn't used this specific driver before I was more or less familiar with forming queries and prepared statements. For optimization I used a batch insert, it now hovers around 300ms-500ms for the given CSV when otherwise it would most likely take several minutes. I thought about trying to take this lower but I didn't want to wait to turn the assignment in any longer since I had already been out of town for most of the week and been unable to work on it.
 
-I then added some JavaDoc comments explaining what exactly each function did just for some added readability, then configured the Maven assembly plugin to handle the
+Afterwards I added some JavaDoc comments explaining what each function did for some added readability, then configured the Maven assembly plugin to handle the
 dependencies for the jar, and then started writing this README. I'm not sure if I went into enough detail about my process, so feel free to email me with any further questions.
